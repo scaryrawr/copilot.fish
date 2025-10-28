@@ -1,0 +1,5 @@
+# Fish shell plugin - minimal ignores
+*.swp
+*.swo
+*~
+.DS_Store
