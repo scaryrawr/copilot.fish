@@ -1,5 +1,26 @@
 # Fish completions for GitHub Copilot CLI
 
+function __fish_copilot_models
+    set -l models (copilot --help 2>/dev/null \
+        | awk '
+            /--model <model>/{f=1}
+            f{
+              if($0 ~ /^  --[^ ]/ && $0 !~ /--model <model>/){exit}
+              print
+            }
+          ' \
+        | grep -o '"[^"]\+"' \
+        | tr -d '"')
+
+    if test (count $models) -gt 0
+        printf '%s\n' $models
+        return
+    end
+
+    # Fallback in case help output parsing fails.
+    printf '%s\n' claude-sonnet-4.5 claude-haiku-4.5 claude-opus-4.5 claude-sonnet-4 gpt-5.1-codex-max gpt-5.1-codex gpt-5.2 gpt-5.1 gpt-5 gpt-5.1-codex-mini gpt-5-mini gpt-4.1 gemini-3-pro-preview
+end
+
 # Disable file completion by default
 complete -c copilot -f
 
@@ -22,7 +43,7 @@ complete -c copilot -s h -l help -d 'Display help for command'
 complete -c copilot -s i -l interactive -r -d 'Start interactive mode and automatically execute this prompt'
 complete -c copilot -l log-dir -r -d 'Set log file directory'
 complete -c copilot -l log-level -xa 'none error warning info debug all default' -d 'Set the log level'
-complete -c copilot -l model -xa 'claude-sonnet-4.5 claude-opus-4.5 claude-haiku-4.5 claude-sonnet-4 gpt-5 gpt-5.1 gpt-5.1-codex-mini gpt-5.1-codex-max gpt-5.1-codex gpt-5-mini gpt-4.1 gemini-3-pro-preview' -d 'Set the AI model to use'
+complete -c copilot -l model -x -a '(__fish_copilot_models)' -d 'Set the AI model to use'
 complete -c copilot -l no-color -d 'Disable all color output'
 complete -c copilot -l no-custom-instructions -d 'Disable loading of custom instructions from AGENTS.md'
 complete -c copilot -s p -l prompt -r -d 'Execute a prompt directly without interactive mode'
