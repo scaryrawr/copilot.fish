@@ -1,48 +1,5 @@
 # Fish completions for GitHub Copilot CLI
 
-function __fish_copilot_agents
-    set -l agents_dir ~/.copilot/agents
-    
-    # Check if agents directory exists
-    test -d $agents_dir; or return
-    
-    # Find all .agent.md files and extract names
-    for file in $agents_dir/*.agent.md
-        test -f $file; or continue
-        
-        # Try to extract name from YAML frontmatter
-        set -l name (awk 'BEGIN{in_yaml=0} /^---$/{in_yaml=!in_yaml; next} in_yaml && /^name:/{print}' $file | sed 's/^name:[[:space:]]*//;s/^"//;s/"$//')
-        
-        # If no name in frontmatter, use filename without .agent.md
-        if test -z "$name"
-            set name (basename $file .agent.md)
-        end
-        
-        echo $name
-    end
-end
-
-function __fish_copilot_models
-    set -l models (copilot --help 2>/dev/null \
-        | awk '
-            /--model <model>/{f=1}
-            f{
-              if($0 ~ /^  --[^ ]/ && $0 !~ /--model <model>/){exit}
-              print
-            }
-          ' \
-        | grep -o '"[^"]\+"' \
-        | tr -d '"')
-
-    if test (count $models) -gt 0
-        printf '%s\n' $models
-        return
-    end
-
-    # Fallback in case help output parsing fails.
-    printf '%s\n' claude-sonnet-4.5 claude-haiku-4.5 claude-opus-4.5 claude-sonnet-4 gpt-5.1-codex-max gpt-5.1-codex gpt-5.2 gpt-5.1 gpt-5 gpt-5.1-codex-mini gpt-5-mini gpt-4.1 gemini-3-pro-preview
-end
-
 # Disable file completion by default
 complete -c copilot -f
 
