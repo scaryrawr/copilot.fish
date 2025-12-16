@@ -1,5 +1,27 @@
 # Fish completions for GitHub Copilot CLI
 
+function __fish_copilot_agents
+    set -l agents_dir ~/.copilot/agents
+    
+    # Check if agents directory exists
+    test -d $agents_dir; or return
+    
+    # Find all .agent.md files and extract names
+    for file in $agents_dir/*.agent.md
+        test -f $file; or continue
+        
+        # Try to extract name from YAML frontmatter
+        set -l name (awk 'BEGIN{in_yaml=0} /^---$/{in_yaml=!in_yaml; next} in_yaml && /^name:/{print}' $file | sed 's/^name:[[:space:]]*//;s/^"//;s/"$//')
+        
+        # If no name in frontmatter, use filename without .agent.md
+        if test -z "$name"
+            set name (basename $file .agent.md)
+        end
+        
+        echo $name
+    end
+end
+
 function __fish_copilot_models
     set -l models (copilot --help 2>/dev/null \
         | awk '
@@ -27,7 +49,7 @@ complete -c copilot -f
 # Options
 complete -c copilot -l add-dir -r -d 'Add a directory to the allowed list for file access'
 complete -c copilot -l additional-mcp-config -r -d 'Additional MCP servers configuration as JSON string or file path'
-complete -c copilot -l agent -r -d 'Specify a custom agent to use, only in prompt mode'
+complete -c copilot -l agent -x -a '(__fish_copilot_agents)' -d 'Specify a custom agent to use, only in prompt mode'
 complete -c copilot -l allow-all-paths -d 'Disable file path verification and allow access to any path'
 complete -c copilot -l allow-all-tools -d 'Allow all tools to run automatically without confirmation'
 complete -c copilot -l allow-tool -r -d 'Allow specific tools'
