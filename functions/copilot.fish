@@ -1,3 +1,3 @@
 function copilot
-    command copilot --disable-mcp-server github-mcp-server $argv
+    command copilot $argv
 end
