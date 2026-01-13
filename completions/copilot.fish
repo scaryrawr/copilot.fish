@@ -8,7 +8,8 @@ complete -c copilot -l add-dir -r -d 'Add a directory to the allowed list for fi
 complete -c copilot -l add-github-mcp-tool -r -d 'Add a tool to enable for the GitHub MCP server'
 complete -c copilot -l add-github-mcp-toolset -r -d 'Add a toolset to enable for the GitHub MCP server'
 complete -c copilot -l additional-mcp-config -r -d 'Additional MCP servers configuration as JSON string or file path'
-complete -c copilot -l agent -x -a '(__fish_copilot_agents)' -d 'Specify a custom agent to use, only in prompt mode'
+complete -c copilot -l agent -x -a '(__fish_copilot_agents)' -d 'Specify a custom agent to use'
+complete -c copilot -l allow-all -d 'Enable all permissions (equivalent to --allow-all-tools --allow-all-paths --allow-all-urls)'
 complete -c copilot -l allow-all-paths -d 'Disable file path verification and allow access to any path'
 complete -c copilot -l allow-all-tools -d 'Allow all tools to run automatically without confirmation'
 complete -c copilot -l allow-all-urls -d 'Allow access to all URLs without confirmation'
@@ -42,6 +43,7 @@ complete -c copilot -l share -r -d 'Share session to markdown file after complet
 complete -c copilot -l share-gist -d 'Share session to a secret GitHub gist after completion'
 complete -c copilot -l stream -xa 'on off' -d 'Enable or disable streaming mode'
 complete -c copilot -s v -l version -d 'Show version information'
+complete -c copilot -l yolo -d 'Enable all permissions (equivalent to --allow-all-tools --allow-all-paths --allow-all-urls)'
 
 # Commands
 complete -c copilot -n __fish_use_subcommand -a help -d 'Display help information'
