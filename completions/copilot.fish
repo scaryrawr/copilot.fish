@@ -25,7 +25,8 @@ complete -c copilot -l disable-builtin-mcps -d 'Disable all built-in MCP servers
 complete -c copilot -l disable-mcp-server -r -d 'Disable a specific MCP server'
 complete -c copilot -l disable-parallel-tools-execution -d 'Disable parallel execution of tools'
 complete -c copilot -l disallow-temp-dir -d 'Prevent automatic access to the system temporary directory'
-complete -c copilot -l enable-all-github-mcp-tools -d 'Enable all GitHub MCP server tools'
+complete -c copilot -l enable-all-github-mcp-tools -d 'Enable all GitHub MCP server tools instead of the default CLI subset'
+complete -c copilot -l experimental -d 'Enable experimental features'
 complete -c copilot -l excluded-tools -r -d 'These tools will not be available to the model'
 complete -c copilot -s h -l help -d 'Display help for command'
 complete -c copilot -s i -l interactive -r -d 'Start interactive mode and automatically execute this prompt'
@@ -49,6 +50,9 @@ complete -c copilot -l yolo -d 'Enable all permissions (equivalent to --allow-al
 
 # Commands
 complete -c copilot -n __fish_use_subcommand -a help -d 'Display help information'
+complete -c copilot -n __fish_use_subcommand -a init -d 'Initialize Copilot instructions for this repository'
+complete -c copilot -n __fish_use_subcommand -a update -d 'Download the latest version'
+complete -c copilot -n __fish_use_subcommand -a version -d 'Display version information and check for updates'
 
 # Help topics
 complete -c copilot -n '__fish_seen_subcommand_from help' -a 'config' -d 'Configuration Settings'
