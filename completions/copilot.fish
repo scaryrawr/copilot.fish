@@ -4,6 +4,7 @@
 complete -c copilot -f
 
 # Options
+complete -c copilot -l acp -d 'Start as Agent Client Protocol server'
 complete -c copilot -l add-dir -r -d 'Add a directory to the allowed list for file access'
 complete -c copilot -l add-github-mcp-tool -r -d 'Add a tool to enable for the GitHub MCP server'
 complete -c copilot -l add-github-mcp-toolset -r -d 'Add a toolset to enable for the GitHub MCP server'
