@@ -52,8 +52,37 @@ complete -c copilot -l yolo -d 'Enable all permissions (equivalent to --allow-al
 # Commands
 complete -c copilot -n __fish_use_subcommand -a help -d 'Display help information'
 complete -c copilot -n __fish_use_subcommand -a init -d 'Initialize Copilot instructions for this repository'
+complete -c copilot -n __fish_use_subcommand -a login -d 'Authenticate with Copilot via OAuth device flow'
+complete -c copilot -n __fish_use_subcommand -a plugin -d 'Manage plugins and plugin marketplaces'
 complete -c copilot -n __fish_use_subcommand -a update -d 'Download the latest version'
 complete -c copilot -n __fish_use_subcommand -a version -d 'Display version information and check for updates'
+
+# login subcommand options
+complete -c copilot -n '__fish_seen_subcommand_from login' -l host -r -d 'GitHub host URL'
+complete -c copilot -n '__fish_seen_subcommand_from login' -l config-dir -r -a '(__fish_complete_directories)' -d 'Set the configuration directory'
+complete -c copilot -n '__fish_seen_subcommand_from login' -s h -l help -d 'Display help for command'
+
+# plugin subcommand
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from install uninstall update list marketplace' -a install -d 'Install a plugin'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from install uninstall update list marketplace' -a uninstall -d 'Uninstall a plugin'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from install uninstall update list marketplace' -a update -d 'Update a plugin to the latest version'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from install uninstall update list marketplace' -a list -d 'List installed plugins'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from install uninstall update list marketplace' -a marketplace -d 'Manage plugin marketplaces'
+
+# plugin install/uninstall/update/list options
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from install uninstall update list' -l config-dir -r -d 'Path to the configuration directory'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from install uninstall update list' -s h -l help -d 'Display help for command'
+
+# plugin marketplace subcommand
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and not __fish_seen_subcommand_from add remove list browse' -a add -d 'Add a marketplace'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and not __fish_seen_subcommand_from add remove list browse' -a remove -d 'Remove a marketplace'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and not __fish_seen_subcommand_from add remove list browse' -a list -d 'List registered marketplaces'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and not __fish_seen_subcommand_from add remove list browse' -a browse -d 'Browse plugins in a marketplace'
+
+# plugin marketplace subcommand options
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from add remove list browse' -l config-dir -r -d 'Path to the configuration directory'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from add remove list browse' -s h -l help -d 'Display help for command'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from remove' -s f -l force -d 'Force removal even if plugins are installed'
 
 # Help topics
 complete -c copilot -n '__fish_seen_subcommand_from help' -a 'config' -d 'Configuration Settings'
