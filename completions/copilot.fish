@@ -27,8 +27,9 @@ complete -c copilot -l disable-mcp-server -r -d 'Disable a specific MCP server'
 complete -c copilot -l disable-parallel-tools-execution -d 'Disable parallel execution of tools'
 complete -c copilot -l disallow-temp-dir -d 'Prevent automatic access to the system temporary directory'
 complete -c copilot -l enable-all-github-mcp-tools -d 'Enable all GitHub MCP server tools instead of the default CLI subset'
-complete -c copilot -l experimental -d 'Enable experimental features'
 complete -c copilot -l excluded-tools -r -d 'These tools will not be available to the model'
+complete -c copilot -l experimental -d 'Enable experimental features'
+complete -c copilot -l no-experimental -d 'Disable experimental features'
 complete -c copilot -s h -l help -d 'Display help for command'
 complete -c copilot -s i -l interactive -r -d 'Start interactive mode and automatically execute this prompt'
 complete -c copilot -l log-dir -r -a '(__fish_complete_directories)' -d 'Set log file directory'
@@ -73,6 +74,11 @@ complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from install uninstall update list' -l config-dir -r -d 'Path to the configuration directory'
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from install uninstall update list' -s h -l help -d 'Display help for command'
 
+# plugin install/uninstall/update arguments
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from install' -xa '(__fish_copilot_marketplace_plugins)' -d 'Plugin from marketplace'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from uninstall' -xa '(__fish_copilot_installed_plugins)' -d 'Installed plugin'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from update' -xa '(__fish_copilot_installed_plugins)' -d 'Installed plugin'
+
 # plugin marketplace subcommand
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and not __fish_seen_subcommand_from add remove list browse' -a add -d 'Add a marketplace'
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and not __fish_seen_subcommand_from add remove list browse' -a remove -d 'Remove a marketplace'
@@ -83,6 +89,10 @@ complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subc
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from add remove list browse' -l config-dir -r -d 'Path to the configuration directory'
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from add remove list browse' -s h -l help -d 'Display help for command'
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from remove' -s f -l force -d 'Force removal even if plugins are installed'
+
+# plugin marketplace browse/remove arguments
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from browse' -xa '(__fish_copilot_marketplaces)' -d 'Marketplace'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from remove' -xa '(__fish_copilot_marketplaces)' -d 'Marketplace'
 
 # Help topics
 complete -c copilot -n '__fish_seen_subcommand_from help' -a 'config' -d 'Configuration Settings'
