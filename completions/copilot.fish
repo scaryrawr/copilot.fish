@@ -58,12 +58,25 @@ complete -c copilot -n __fish_use_subcommand -a plugin -d 'Manage plugins and pl
 complete -c copilot -n __fish_use_subcommand -a update -d 'Download the latest version'
 complete -c copilot -n __fish_use_subcommand -a version -d 'Display version information and check for updates'
 
+# init subcommand options
+complete -c copilot -n '__fish_seen_subcommand_from init' -s h -l help -d 'Display help for command'
+
+# update subcommand options
+complete -c copilot -n '__fish_seen_subcommand_from update' -s h -l help -d 'Display help for command'
+
+# version subcommand options
+complete -c copilot -n '__fish_seen_subcommand_from version' -s h -l help -d 'Display help for command'
+
+# help subcommand options
+complete -c copilot -n '__fish_seen_subcommand_from help' -s h -l help -d 'Display help for command'
+
 # login subcommand options
 complete -c copilot -n '__fish_seen_subcommand_from login' -l host -r -d 'GitHub host URL'
 complete -c copilot -n '__fish_seen_subcommand_from login' -l config-dir -r -a '(__fish_complete_directories)' -d 'Set the configuration directory'
 complete -c copilot -n '__fish_seen_subcommand_from login' -s h -l help -d 'Display help for command'
 
 # plugin subcommand
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from install uninstall update list marketplace' -s h -l help -d 'Display help for command'
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from install uninstall update list marketplace' -a install -d 'Install a plugin'
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from install uninstall update list marketplace' -a uninstall -d 'Uninstall a plugin'
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from install uninstall update list marketplace' -a update -d 'Update a plugin to the latest version'
