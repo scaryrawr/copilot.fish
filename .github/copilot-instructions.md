@@ -1,46 +1,45 @@
 # Copilot Instructions for copilot.fish
 
-Fish shell plugin providing completions and utilities for GitHub Copilot CLI.
+Fish shell plugin providing completions and utility wrapper functions for GitHub Copilot CLI.
 
-## Validation
+## Build, test, and lint commands
+
+There is no compile/build step for this repository. Validate changes with fish syntax checks and command-level completion probes:
 
 ```fish
-# Syntax check all files
+# Syntax/lint checks
 fish -n completions/copilot.fish
 fish -n functions/*.fish
 
-# Test completions interactively
+# Targeted completion checks (single-command probes)
 complete -C"copilot --mo"
 complete -C"copilot --agent "
+complete -C"copilot plugin marketplace "
 
-# Test function definitions
-source functions/yopilot.fish && functions yopilot
+# Function definition check
+source functions/yopilot.fish && functions -q yopilot
 ```
 
-## Architecture
+## High-level architecture
 
-- **completions/copilot.fish**: All CLI completions using `complete -c copilot` syntax
-- **functions/copilot.fish**: Wrapper that adds `--disable-builtin-mcps` by default
-- **functions/yopilot.fish**: YOLO mode wrapper using `--wraps=copilot` for completion inheritance
-- **functions/__fish_copilot_*.fish**: Private helpers (double underscore prefix) for dynamic completions
+- `completions/copilot.fish`: Static completion definitions for top-level flags, subcommands, plugin flows, and help topics.
+- `functions/yopilot.fish`: Public wrapper with `--wraps=copilot` to inherit completion behavior while defaulting to `--yolo`.
+- `functions/copilot.fish`: Optional pass-through wrapper entry point for `copilot`.
+- `functions/__fish_copilot_*.fish`: Private helper functions used by completions to dynamically enumerate models, agents, marketplaces, and plugins from CLI output.
+- `.github/skills/update-completions/SKILL.md`: Repository skill for refreshing completions against current Copilot CLI help output.
 
-## Conventions
+## Code style and conventions
 
-### Fish Shell Idioms
-- Use `function` keyword with `--description` for user-facing functions
-- Use `--wraps` on wrapper functions to inherit completions
-- Use `set -l` for local variables, `test` for conditionals (not `[` or `[[`)
-- Use `command` prefix when calling external binaries from wrapper functions
+- Use Fish idioms: `function`, `set -l`, `test`, and command substitutions with parentheses.
+- Use `command` when invoking external binaries from wrappers to avoid accidental recursion.
+- Keep one function per file in `functions/`, and match filename to function name.
+- Public functions should be lowercase without underscores; private helpers should use `__fish_` prefix.
+- Completions should disable file suggestions (`-f`) when path completion is not intended, and every `complete` entry must have a `-d` description.
+- Use 4-space indentation and keep completion entries grouped by section comments.
 
-### Naming
-- Public functions: lowercase, no underscores (e.g., `yopilot`)
-- Private helpers: `__fish_` prefix (e.g., `__fish_copilot_models`)
+## Path-specific instructions
 
-### Completions
-- Disable file completion with `-f` when appropriate
-- Use `-x` for exclusive arguments, `-r` for required arguments
-- Every completion needs a `-d` description
-
-### Formatting
-- 4 spaces indentation
-- One function per file, filename matches function name
+- `completions/**/*.fish`: Keep options synchronized with `copilot --help` and subcommand help output. Prefer explicit `-n` conditions for subcommand-specific entries.
+- `functions/__fish_copilot_*.fish`: Parse CLI output defensively and keep output format stable (one completion token per line).
+- `functions/*.fish`: User-facing wrappers should preserve Copilot CLI behavior and use `--wraps` when wrapping `copilot`.
+- `.github/skills/**/SKILL.md`: Keep skill metadata concise and include reproducible command sequences for validation/update workflows.
