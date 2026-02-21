@@ -1,3 +1,3 @@
 function copilot
-    command copilot --disable-builtin-mcps $argv
+    command copilot $argv
 end
