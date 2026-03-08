@@ -16,11 +16,11 @@ complete -c copilot -l allow-all-tools -d 'Allow all tools to run automatically 
 complete -c copilot -l allow-all-urls -d 'Allow access to all URLs without confirmation'
 complete -c copilot -l allow-tool -r -d 'Tools the CLI has permission to use; will not prompt for permission'
 complete -c copilot -l allow-url -r -d 'Allow access to specific URLs or domains'
-complete -c copilot -l alt-screen -d 'Use the terminal alternate screen buffer'
+complete -c copilot -l alt-screen -xa 'on off' -d 'Use the terminal alternate screen buffer (on|off)'
 complete -c copilot -l autopilot -d 'Enable autopilot continuation in prompt mode'
 complete -c copilot -l available-tools -r -d 'Only these tools will be available to the model'
 complete -c copilot -l banner -d 'Show the startup banner'
-complete -c copilot -l bash-env -d 'Enable BASH_ENV support for bash shells (on|off)'
+complete -c copilot -l bash-env -xa 'on off' -d 'Enable BASH_ENV support for bash shells (on|off)'
 complete -c copilot -l config-dir -r -a '(__fish_complete_directories)' -d 'Set the configuration directory'
 complete -c copilot -l continue -d 'Resume the most recent session'
 complete -c copilot -l deny-tool -r -d 'Tools the CLI does not have permission to use; will not prompt for permission'
@@ -32,7 +32,7 @@ complete -c copilot -l enable-all-github-mcp-tools -d 'Enable all GitHub MCP ser
 complete -c copilot -l excluded-tools -r -d 'These tools will not be available to the model'
 complete -c copilot -l experimental -d 'Enable experimental features'
 complete -c copilot -l no-experimental -d 'Disable experimental features'
-complete -c copilot -s h -l help -d 'Display help for command'
+complete -c copilot -s h -l help -d 'display help for command'
 complete -c copilot -s i -l interactive -r -d 'Start interactive mode and automatically execute this prompt'
 complete -c copilot -l log-dir -r -a '(__fish_complete_directories)' -d 'Set log file directory'
 complete -c copilot -l log-level -xa 'none error warning info debug all default' -d 'Set the log level'
@@ -46,44 +46,47 @@ complete -c copilot -l no-bash-env -d 'Disable BASH_ENV support for bash shells'
 complete -c copilot -l no-color -d 'Disable all color output'
 complete -c copilot -l no-custom-instructions -d 'Disable loading of custom instructions from AGENTS.md and related files'
 complete -c copilot -s p -l prompt -r -d 'Execute a prompt in non-interactive mode (exits after completion)'
+complete -c copilot -l output-format -xa 'text json' -d 'Output format: ''text'' (default) or ''json'' (JSONL, one JSON object per line)'
 complete -c copilot -l plain-diff -d 'Disable rich diff rendering'
+complete -c copilot -l plugin-dir -r -a '(__fish_complete_directories)' -d 'Load a plugin from a local directory (can be used multiple times)'
 complete -c copilot -l no-mouse -d 'Disable mouse support in alt screen mode'
 complete -c copilot -l resume -d 'Resume from a previous session (optionally specify session ID)'
 complete -c copilot -s s -l silent -d 'Output only the agent response (no stats), useful for scripting with -p'
 complete -c copilot -l screen-reader -d 'Enable screen reader optimizations'
+complete -c copilot -l secret-env-vars -r -d 'Space-separated environment variable names whose values are stripped from shell and MCP server environments and redacted from output'
 complete -c copilot -l share -F -d 'Share session to markdown file after completion in non-interactive mode'
 complete -c copilot -l share-gist -d 'Share session to a secret GitHub gist after completion in non-interactive mode'
 complete -c copilot -l stream -xa 'on off' -d 'Enable or disable streaming mode'
-complete -c copilot -s v -l version -d 'Show version information'
+complete -c copilot -s v -l version -d 'show version information'
 complete -c copilot -l yolo -d 'Enable all permissions (equivalent to --allow-all-tools --allow-all-paths --allow-all-urls)'
 
 # Commands
 complete -c copilot -n __fish_use_subcommand -a help -d 'Display help information'
-complete -c copilot -n __fish_use_subcommand -a init -d 'Initialize Copilot instructions for this repository'
-complete -c copilot -n __fish_use_subcommand -a login -d 'Authenticate with Copilot via OAuth device flow'
-complete -c copilot -n __fish_use_subcommand -a plugin -d 'Manage plugins and plugin marketplaces'
+complete -c copilot -n __fish_use_subcommand -a init -d 'Initialize Copilot instructions'
+complete -c copilot -n __fish_use_subcommand -a login -d 'Authenticate with Copilot'
+complete -c copilot -n __fish_use_subcommand -a plugin -d 'Manage plugins'
 complete -c copilot -n __fish_use_subcommand -a update -d 'Download the latest version'
-complete -c copilot -n __fish_use_subcommand -a version -d 'Display version information and check for updates'
+complete -c copilot -n __fish_use_subcommand -a version -d 'Display version information'
 
 # init subcommand options
-complete -c copilot -n '__fish_seen_subcommand_from init' -s h -l help -d 'Display help for command'
+complete -c copilot -n '__fish_seen_subcommand_from init' -s h -l help -d 'display help for command'
 
 # update subcommand options
-complete -c copilot -n '__fish_seen_subcommand_from update' -s h -l help -d 'Display help for command'
+complete -c copilot -n '__fish_seen_subcommand_from update' -s h -l help -d 'display help for command'
 
 # version subcommand options
-complete -c copilot -n '__fish_seen_subcommand_from version' -s h -l help -d 'Display help for command'
+complete -c copilot -n '__fish_seen_subcommand_from version' -s h -l help -d 'display help for command'
 
 # help subcommand options
-complete -c copilot -n '__fish_seen_subcommand_from help' -s h -l help -d 'Display help for command'
+complete -c copilot -n '__fish_seen_subcommand_from help' -s h -l help -d 'display help for command'
 
 # login subcommand options
 complete -c copilot -n '__fish_seen_subcommand_from login' -l host -r -d 'GitHub host URL'
 complete -c copilot -n '__fish_seen_subcommand_from login' -l config-dir -r -a '(__fish_complete_directories)' -d 'Set the configuration directory'
-complete -c copilot -n '__fish_seen_subcommand_from login' -s h -l help -d 'Display help for command'
+complete -c copilot -n '__fish_seen_subcommand_from login' -s h -l help -d 'display help for command'
 
 # plugin subcommand
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from install uninstall update list marketplace' -s h -l help -d 'Display help for command'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from install uninstall update list marketplace' -s h -l help -d 'display help for command'
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from install uninstall update list marketplace' -a install -d 'Install a plugin'
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from install uninstall update list marketplace' -a uninstall -d 'Uninstall a plugin'
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from install uninstall update list marketplace' -a update -d 'Update a plugin to the latest version'
@@ -91,8 +94,8 @@ complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from install uninstall update list marketplace' -a marketplace -d 'Manage plugin marketplaces'
 
 # plugin install/uninstall/update/list options
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from install uninstall update list' -l config-dir -r -d 'Path to the configuration directory'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from install uninstall update list' -s h -l help -d 'Display help for command'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from install uninstall update list' -l config-dir -r -a '(__fish_complete_directories)' -d 'Path to the configuration directory'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from install uninstall update list' -s h -l help -d 'display help for command'
 
 # plugin install/uninstall/update arguments
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from install' -xa '(__fish_copilot_marketplace_plugins)' -d 'Plugin from marketplace'
@@ -106,17 +109,18 @@ complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subc
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and not __fish_seen_subcommand_from add remove list browse' -a browse -d 'Browse plugins in a marketplace'
 
 # plugin marketplace subcommand options
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from add remove list browse' -l config-dir -r -d 'Path to the configuration directory'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from add remove list browse' -s h -l help -d 'Display help for command'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from add remove list browse' -l config-dir -r -a '(__fish_complete_directories)' -d 'Path to the configuration directory'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from add remove list browse' -s h -l help -d 'display help for command'
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from remove' -s f -l force -d 'Force removal even if plugins are installed'
 
-# plugin marketplace browse/remove arguments
+# plugin marketplace arguments
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from add' -F -d 'Marketplace source (owner/repo, URL, or local path)'
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from browse' -xa '(__fish_copilot_marketplaces)' -d 'Marketplace'
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from remove' -xa '(__fish_copilot_marketplaces)' -d 'Marketplace'
 
 # Help topics
-complete -c copilot -n '__fish_seen_subcommand_from help' -a 'config' -d 'Configuration Settings'
 complete -c copilot -n '__fish_seen_subcommand_from help' -a 'commands' -d 'Interactive Mode Commands'
+complete -c copilot -n '__fish_seen_subcommand_from help' -a 'config' -d 'Configuration Settings'
 complete -c copilot -n '__fish_seen_subcommand_from help' -a 'environment' -d 'Environment Variables'
 complete -c copilot -n '__fish_seen_subcommand_from help' -a 'logging' -d 'Logging'
 complete -c copilot -n '__fish_seen_subcommand_from help' -a 'permissions' -d 'Permissions'
