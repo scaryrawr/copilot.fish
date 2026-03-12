@@ -49,6 +49,7 @@ complete -c copilot -s p -l prompt -r -d 'Execute a prompt in non-interactive mo
 complete -c copilot -l output-format -xa 'text json' -d 'Output format: ''text'' (default) or ''json'' (JSONL, one JSON object per line)'
 complete -c copilot -l plain-diff -d 'Disable rich diff rendering'
 complete -c copilot -l plugin-dir -r -a '(__fish_complete_directories)' -d 'Load a plugin from a local directory (can be used multiple times)'
+complete -c copilot -l reasoning-effort -xa 'low medium high xhigh' -d 'Set the reasoning effort level'
 complete -c copilot -l no-mouse -d 'Disable mouse support in alt screen mode'
 complete -c copilot -l resume -d 'Resume from a previous session (optionally specify session ID)'
 complete -c copilot -s s -l silent -d 'Output only the agent response (no stats), useful for scripting with -p'
