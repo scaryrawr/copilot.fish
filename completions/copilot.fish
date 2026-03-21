@@ -4,11 +4,12 @@
 complete -c copilot -f
 
 # Options
+complete -c copilot -l effort -xa 'low medium high xhigh' -d 'Set the reasoning effort level'
 complete -c copilot -l acp -d 'Start as Agent Client Protocol server'
 complete -c copilot -l add-dir -r -a '(__fish_complete_directories)' -d 'Add a directory to the allowed list for file access'
-complete -c copilot -l add-github-mcp-tool -r -d 'Add a tool to enable for the GitHub MCP server'
-complete -c copilot -l add-github-mcp-toolset -r -d 'Add a toolset to enable for the GitHub MCP server'
-complete -c copilot -l additional-mcp-config -r -d 'Additional MCP servers configuration as JSON string or file path'
+complete -c copilot -l add-github-mcp-tool -r -d 'Add a tool to enable for the GitHub MCP server instead of the default CLI subset'
+complete -c copilot -l add-github-mcp-toolset -r -d 'Add a toolset to enable for the GitHub MCP server instead of the default CLI subset'
+complete -c copilot -l additional-mcp-config -r -d 'Additional MCP servers configuration as JSON string or file path (prefix with @)'
 complete -c copilot -l agent -x -a '(__fish_copilot_agents)' -d 'Specify a custom agent to use'
 complete -c copilot -l allow-all -d 'Enable all permissions (equivalent to --allow-all-tools --allow-all-paths --allow-all-urls)'
 complete -c copilot -l allow-all-paths -d 'Disable file path verification and allow access to any path'
@@ -36,11 +37,11 @@ complete -c copilot -s h -l help -d 'display help for command'
 complete -c copilot -s i -l interactive -r -d 'Start interactive mode and automatically execute this prompt'
 complete -c copilot -l log-dir -r -a '(__fish_complete_directories)' -d 'Set log file directory'
 complete -c copilot -l log-level -xa 'none error warning info debug all default' -d 'Set the log level'
-complete -c copilot -l max-autopilot-continues -r -d 'Maximum number of continuation messages in autopilot mode'
+complete -c copilot -l max-autopilot-continues -r -d 'Maximum number of continuation messages in autopilot mode (default: unlimited)'
 complete -c copilot -l model -x -a '(__fish_copilot_models)' -d 'Set the AI model to use'
 complete -c copilot -l mouse -xa 'on off' -d 'Enable mouse support in alt screen mode (on|off)'
 complete -c copilot -l no-alt-screen -d 'Disable the terminal alternate screen buffer'
-complete -c copilot -l no-ask-user -d 'Disable the ask_user tool (agent works autonomously)'
+complete -c copilot -l no-ask-user -d 'Disable the ask_user tool (agent works autonomously without asking questions)'
 complete -c copilot -l no-auto-update -d 'Disable downloading CLI update automatically'
 complete -c copilot -l no-bash-env -d 'Disable BASH_ENV support for bash shells'
 complete -c copilot -l no-color -d 'Disable all color output'
@@ -51,7 +52,7 @@ complete -c copilot -l plain-diff -d 'Disable rich diff rendering'
 complete -c copilot -l plugin-dir -r -a '(__fish_complete_directories)' -d 'Load a plugin from a local directory (can be used multiple times)'
 complete -c copilot -l reasoning-effort -xa 'low medium high xhigh' -d 'Set the reasoning effort level'
 complete -c copilot -l no-mouse -d 'Disable mouse support in alt screen mode'
-complete -c copilot -l resume -d 'Resume from a previous session (optionally specify session ID)'
+complete -c copilot -l resume -d 'Resume from a previous session (optionally specify session ID or task ID)'
 complete -c copilot -s s -l silent -d 'Output only the agent response (no stats), useful for scripting with -p'
 complete -c copilot -l screen-reader -d 'Enable screen reader optimizations'
 complete -c copilot -l secret-env-vars -r -d 'Space-separated environment variable names whose values are stripped from shell and MCP server environments and redacted from output'
@@ -100,8 +101,8 @@ complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subc
 
 # plugin install/uninstall/update arguments
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from install' -xa '(__fish_copilot_marketplace_plugins)' -d 'Plugin source (plugin@marketplace, owner/repo, owner/repo:path, or URL)'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from uninstall' -xa '(__fish_copilot_installed_plugins)' -d 'Installed plugin'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from update' -xa '(__fish_copilot_installed_plugins)' -d 'Installed plugin'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from uninstall' -xa '(__fish_copilot_installed_plugins)' -d 'Plugin name (plugin-name or plugin-name@marketplace-name)'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from update' -xa '(__fish_copilot_installed_plugins)' -d 'Plugin name (plugin-name@marketplace-name)'
 
 # plugin marketplace subcommand
 complete -c copilot -n '__fish_seen_subcommand_from plugin marketplace; and not __fish_seen_subcommand_from add remove list browse' -s h -l help -d 'display help for command'
@@ -117,8 +118,8 @@ complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subc
 
 # plugin marketplace arguments
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from add' -F -d 'Marketplace source (owner/repo, URL, or local path)'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from browse' -xa '(__fish_copilot_marketplaces)' -d 'Marketplace'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from remove' -xa '(__fish_copilot_marketplaces)' -d 'Marketplace'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from browse' -xa '(__fish_copilot_marketplaces)' -d 'Marketplace name'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from remove' -xa '(__fish_copilot_marketplaces)' -d 'Marketplace name'
 
 # Help topics
 complete -c copilot -n '__fish_seen_subcommand_from help' -a 'commands' -d 'Interactive Mode Commands'
