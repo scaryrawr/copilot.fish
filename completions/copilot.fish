@@ -17,7 +17,7 @@ complete -c copilot -l allow-all-tools -d 'Allow all tools to run automatically 
 complete -c copilot -l allow-all-urls -d 'Allow access to all URLs without confirmation'
 complete -c copilot -l allow-tool -r -d 'Tools the CLI has permission to use; will not prompt for permission'
 complete -c copilot -l allow-url -r -d 'Allow access to specific URLs or domains'
-complete -c copilot -l autopilot -d 'Enable autopilot continuation in prompt mode'
+complete -c copilot -l autopilot -d 'Start in autopilot mode'
 complete -c copilot -l available-tools -r -d 'Only these tools will be available to the model'
 complete -c copilot -l banner -d 'Show the startup banner'
 complete -c copilot -l bash-env -xa 'on off' -d 'Enable BASH_ENV support for bash shells (on|off)'
@@ -26,7 +26,7 @@ complete -c copilot -l continue -d 'Resume the most recent session'
 complete -c copilot -l deny-tool -r -d 'Tools the CLI does not have permission to use; will not prompt for permission'
 complete -c copilot -l deny-url -r -d 'Deny access to specific URLs or domains'
 complete -c copilot -l disable-builtin-mcps -d 'Disable all built-in MCP servers'
-complete -c copilot -l disable-mcp-server -r -d 'Disable a specific MCP server'
+complete -c copilot -l disable-mcp-server -x -a '(__fish_copilot_mcp_servers)' -d 'Disable a specific MCP server'
 complete -c copilot -l disallow-temp-dir -d 'Prevent automatic access to the system temporary directory'
 complete -c copilot -l enable-all-github-mcp-tools -d 'Enable all GitHub MCP server tools instead of the default CLI subset'
 complete -c copilot -l enable-reasoning-summaries -d 'Request reasoning summaries for OpenAI models'
@@ -38,16 +38,18 @@ complete -c copilot -s i -l interactive -r -d 'Start interactive mode and automa
 complete -c copilot -l log-dir -r -a '(__fish_complete_directories)' -d 'Set log file directory'
 complete -c copilot -l log-level -xa 'none error warning info debug all default' -d 'Set the log level'
 complete -c copilot -l max-autopilot-continues -r -d 'Maximum number of continuation messages in autopilot mode (default: unlimited)'
+complete -c copilot -l mode -xa 'interactive plan autopilot' -d 'Set the initial agent mode'
 complete -c copilot -l model -x -a '(__fish_copilot_models)' -d 'Set the AI model to use'
 complete -c copilot -l mouse -xa 'on off' -d 'Enable mouse support in alt screen mode (on|off)'
 complete -c copilot -l no-ask-user -d 'Disable the ask_user tool (agent works autonomously without asking questions)'
-complete -c copilot -l no-auto-update -d 'Disable downloading CLI update automatically'
+complete -c copilot -l no-auto-update -d 'Disable downloading CLI update automatically (disabled by default in CI environments)'
 complete -c copilot -l no-bash-env -d 'Disable BASH_ENV support for bash shells'
 complete -c copilot -l no-color -d 'Disable all color output'
 complete -c copilot -l no-custom-instructions -d 'Disable loading of custom instructions from AGENTS.md and related files'
 complete -c copilot -s p -l prompt -r -d 'Execute a prompt in non-interactive mode (exits after completion)'
 complete -c copilot -l output-format -xa 'text json' -d 'Output format: ''text'' (default) or ''json'' (JSONL, one JSON object per line)'
 complete -c copilot -l plain-diff -d 'Disable rich diff rendering'
+complete -c copilot -l plan -d 'Start in plan mode'
 complete -c copilot -l plugin-dir -r -a '(__fish_complete_directories)' -d 'Load a plugin from a local directory (can be used multiple times)'
 complete -c copilot -l reasoning-effort -xa 'low medium high xhigh' -d 'Set the reasoning effort level'
 complete -c copilot -l no-mouse -d 'Disable mouse support in alt screen mode'
@@ -65,6 +67,7 @@ complete -c copilot -l yolo -d 'Enable all permissions (equivalent to --allow-al
 complete -c copilot -n __fish_use_subcommand -a help -d 'Display help information'
 complete -c copilot -n __fish_use_subcommand -a init -d 'Initialize Copilot instructions'
 complete -c copilot -n __fish_use_subcommand -a login -d 'Authenticate with Copilot'
+complete -c copilot -n __fish_use_subcommand -a mcp -d 'Manage MCP servers'
 complete -c copilot -n __fish_use_subcommand -a plugin -d 'Manage plugins'
 complete -c copilot -n __fish_use_subcommand -a update -d 'Download the latest version'
 complete -c copilot -n __fish_use_subcommand -a version -d 'Display version information'
@@ -85,6 +88,44 @@ complete -c copilot -n '__fish_seen_subcommand_from help' -s h -l help -d 'displ
 complete -c copilot -n '__fish_seen_subcommand_from login' -l host -r -d 'GitHub host URL'
 complete -c copilot -n '__fish_seen_subcommand_from login' -l config-dir -r -a '(__fish_complete_directories)' -d 'Set the configuration directory'
 complete -c copilot -n '__fish_seen_subcommand_from login' -s h -l help -d 'display help for command'
+
+# mcp subcommand
+complete -c copilot -n '__fish_seen_subcommand_from mcp; and not __fish_seen_subcommand_from add get help list remove' -s h -l help -d 'display help for command'
+complete -c copilot -n '__fish_seen_subcommand_from mcp; and not __fish_seen_subcommand_from add get help list remove' -a add -d 'Add an MCP server'
+complete -c copilot -n '__fish_seen_subcommand_from mcp; and not __fish_seen_subcommand_from add get help list remove' -a get -d 'Show server details'
+complete -c copilot -n '__fish_seen_subcommand_from mcp; and not __fish_seen_subcommand_from add get help list remove' -a help -d 'display help for command'
+complete -c copilot -n '__fish_seen_subcommand_from mcp; and not __fish_seen_subcommand_from add get help list remove' -a list -d 'List configured MCP servers'
+complete -c copilot -n '__fish_seen_subcommand_from mcp; and not __fish_seen_subcommand_from add get help list remove' -a remove -d 'Remove an MCP server'
+
+# mcp shared options
+complete -c copilot -n '__fish_seen_subcommand_from mcp; and __fish_seen_subcommand_from add get list remove' -l config-dir -r -a '(__fish_complete_directories)' -d 'Path to the configuration directory'
+
+# mcp add options
+complete -c copilot -n '__fish_seen_subcommand_from mcp; and __fish_seen_subcommand_from add' -l env -r -d 'Environment variable (KEY=VALUE, can be repeated)'
+complete -c copilot -n '__fish_seen_subcommand_from mcp; and __fish_seen_subcommand_from add' -l header -r -d 'HTTP header for remote servers, can be repeated'
+complete -c copilot -n '__fish_seen_subcommand_from mcp; and __fish_seen_subcommand_from add' -s h -l help -d 'display help for command'
+complete -c copilot -n '__fish_seen_subcommand_from mcp; and __fish_seen_subcommand_from add' -l json -d 'Output added config as JSON'
+complete -c copilot -n '__fish_seen_subcommand_from mcp; and __fish_seen_subcommand_from add' -l show-secrets -d 'Show full environment variable and header values in output, masked by default'
+complete -c copilot -n '__fish_seen_subcommand_from mcp; and __fish_seen_subcommand_from add' -l timeout -r -d 'Timeout in milliseconds'
+complete -c copilot -n '__fish_seen_subcommand_from mcp; and __fish_seen_subcommand_from add' -l tools -r -d 'Tool filter: "*" for all, comma-separated list, or "" for none'
+complete -c copilot -n '__fish_seen_subcommand_from mcp; and __fish_seen_subcommand_from add' -l transport -xa 'stdio http sse' -d 'Server transport'
+
+# mcp get options
+complete -c copilot -n '__fish_seen_subcommand_from mcp; and __fish_seen_subcommand_from get' -s h -l help -d 'display help for command'
+complete -c copilot -n '__fish_seen_subcommand_from mcp; and __fish_seen_subcommand_from get' -l json -d 'Output as JSON'
+complete -c copilot -n '__fish_seen_subcommand_from mcp; and __fish_seen_subcommand_from get' -l show-secrets -d 'Show full environment variable and header values (masked by default)'
+
+# mcp list options
+complete -c copilot -n '__fish_seen_subcommand_from mcp; and __fish_seen_subcommand_from list' -s h -l help -d 'display help for command'
+complete -c copilot -n '__fish_seen_subcommand_from mcp; and __fish_seen_subcommand_from list' -l json -d 'Output as JSON'
+
+# mcp remove options
+complete -c copilot -n '__fish_seen_subcommand_from mcp; and __fish_seen_subcommand_from remove' -s h -l help -d 'display help for command'
+
+# mcp arguments
+complete -c copilot -n '__fish_seen_subcommand_from mcp; and __fish_seen_subcommand_from get' -xa '(__fish_copilot_mcp_servers)' -d 'Server name'
+complete -c copilot -n '__fish_seen_subcommand_from mcp; and __fish_seen_subcommand_from help' -a 'add get list remove' -d 'MCP command'
+complete -c copilot -n '__fish_seen_subcommand_from mcp; and __fish_seen_subcommand_from remove' -xa '(__fish_copilot_mcp_servers)' -d 'Server name'
 
 # plugin subcommand
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from install uninstall update list marketplace' -s h -l help -d 'display help for command'
@@ -125,5 +166,6 @@ complete -c copilot -n '__fish_seen_subcommand_from help' -a 'commands' -d 'Inte
 complete -c copilot -n '__fish_seen_subcommand_from help' -a 'config' -d 'Configuration Settings'
 complete -c copilot -n '__fish_seen_subcommand_from help' -a 'environment' -d 'Environment Variables'
 complete -c copilot -n '__fish_seen_subcommand_from help' -a 'logging' -d 'Logging'
+complete -c copilot -n '__fish_seen_subcommand_from help' -a 'monitoring' -d 'Monitoring with OpenTelemetry'
 complete -c copilot -n '__fish_seen_subcommand_from help' -a 'permissions' -d 'Permissions'
 complete -c copilot -n '__fish_seen_subcommand_from help' -a 'providers' -d 'Custom Model Providers (BYOK)'
