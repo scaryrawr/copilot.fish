@@ -138,30 +138,32 @@ complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from install uninstall update list marketplace' -a marketplace -d 'Manage plugin marketplaces'
 
 # plugin install/uninstall/update/list options
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from install uninstall update list' -l config-dir -r -a '(__fish_complete_directories)' -d 'Path to the configuration directory'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from install uninstall update list' -s h -l help -d 'display help for command'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from install uninstall update list' -l config-dir -r -a '(__fish_complete_directories)' -d 'Path to the configuration directory'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from install uninstall update list' -s h -l help -d 'display help for command'
 
 # plugin install/uninstall/update arguments
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from install' -xa '(__fish_copilot_marketplace_plugins)' -d 'Plugin source (plugin@marketplace, owner/repo, owner/repo:path, or URL)'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from uninstall' -xa '(__fish_copilot_installed_plugins)' -d 'Plugin name (plugin-name or plugin-name@marketplace-name)'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from update' -xa '(__fish_copilot_installed_plugins)' -d 'Plugin name (plugin-name@marketplace-name)'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from install' -xa '(__fish_copilot_marketplace_plugins)' -d 'Plugin source (plugin@marketplace, owner/repo, owner/repo:path, or URL)'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from uninstall' -xa '(__fish_copilot_installed_plugins)' -d 'Plugin name (plugin-name or plugin-name@marketplace-name)'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from update' -xa '(__fish_copilot_installed_plugins)' -d 'Plugin name (plugin-name@marketplace-name)'
 
 # plugin marketplace subcommand
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and not __fish_seen_subcommand_from add remove list browse' -s h -l help -d 'display help for command'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and not __fish_seen_subcommand_from add remove list browse' -a add -d 'Add a marketplace'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and not __fish_seen_subcommand_from add remove list browse' -a remove -d 'Remove a marketplace'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and not __fish_seen_subcommand_from add remove list browse' -a list -d 'List registered marketplaces'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and not __fish_seen_subcommand_from add remove list browse' -a browse -d 'Browse plugins in a marketplace'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and not __fish_seen_subcommand_from add remove list browse update' -s h -l help -d 'display help for command'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and not __fish_seen_subcommand_from add remove list browse update' -a add -d 'Add a marketplace'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and not __fish_seen_subcommand_from add remove list browse update' -a remove -d 'Remove a marketplace'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and not __fish_seen_subcommand_from add remove list browse update' -a list -d 'List registered marketplaces'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and not __fish_seen_subcommand_from add remove list browse update' -a browse -d 'Browse plugins in a marketplace'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and not __fish_seen_subcommand_from add remove list browse update' -a update -d 'Update marketplace plugin catalogs'
 
 # plugin marketplace subcommand options
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from add remove list browse' -l config-dir -r -a '(__fish_complete_directories)' -d 'Path to the configuration directory'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from add remove list browse' -s h -l help -d 'display help for command'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from add remove list browse update' -l config-dir -r -a '(__fish_complete_directories)' -d 'Path to the configuration directory'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from add remove list browse update' -s h -l help -d 'display help for command'
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from remove' -s f -l force -d 'Force removal even if plugins are installed'
 
 # plugin marketplace arguments
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from add' -F -d 'Marketplace source (owner/repo, URL, or local path)'
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from browse' -xa '(__fish_copilot_marketplaces)' -d 'Marketplace name'
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from remove' -xa '(__fish_copilot_marketplaces)' -d 'Marketplace name'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from update' -xa '(__fish_copilot_marketplaces)' -d 'Marketplace name'
 
 # Help topics
 complete -c copilot -n '__fish_seen_subcommand_from help' -xa '(__fish_copilot_help_topics)' -d 'Help topic'
