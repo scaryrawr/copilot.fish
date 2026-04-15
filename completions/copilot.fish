@@ -51,8 +51,10 @@ complete -c copilot -l output-format -xa 'text json' -d 'Output format: ''text''
 complete -c copilot -l plain-diff -d 'Disable rich diff rendering'
 complete -c copilot -l plan -d 'Start in plan mode'
 complete -c copilot -l plugin-dir -r -a '(__fish_complete_directories)' -d 'Load a plugin from a local directory (can be used multiple times)'
+complete -c copilot -l remote -d 'Enable remote control of your session from GitHub web and mobile'
 complete -c copilot -l reasoning-effort -xa 'low medium high xhigh' -d 'Set the reasoning effort level'
 complete -c copilot -l no-mouse -d 'Disable mouse support in alt screen mode'
+complete -c copilot -l no-remote -d 'Disable remote control of your session from GitHub web and mobile'
 complete -c copilot -l resume -d 'Resume from a previous session (optionally specify session ID or task ID)'
 complete -c copilot -s s -l silent -d 'Output only the agent response (no stats), useful for scripting with -p'
 complete -c copilot -l screen-reader -d 'Enable screen reader optimizations'
@@ -145,7 +147,7 @@ complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subc
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from update' -xa '(__fish_copilot_installed_plugins)' -d 'Plugin name (plugin-name@marketplace-name)'
 
 # plugin marketplace subcommand
-complete -c copilot -n '__fish_seen_subcommand_from plugin marketplace; and not __fish_seen_subcommand_from add remove list browse' -s h -l help -d 'display help for command'
+complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and not __fish_seen_subcommand_from add remove list browse' -s h -l help -d 'display help for command'
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and not __fish_seen_subcommand_from add remove list browse' -a add -d 'Add a marketplace'
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and not __fish_seen_subcommand_from add remove list browse' -a remove -d 'Remove a marketplace'
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and not __fish_seen_subcommand_from add remove list browse' -a list -d 'List registered marketplaces'
@@ -162,10 +164,4 @@ complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subc
 complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from remove' -xa '(__fish_copilot_marketplaces)' -d 'Marketplace name'
 
 # Help topics
-complete -c copilot -n '__fish_seen_subcommand_from help' -a 'commands' -d 'Interactive Mode Commands'
-complete -c copilot -n '__fish_seen_subcommand_from help' -a 'config' -d 'Configuration Settings'
-complete -c copilot -n '__fish_seen_subcommand_from help' -a 'environment' -d 'Environment Variables'
-complete -c copilot -n '__fish_seen_subcommand_from help' -a 'logging' -d 'Logging'
-complete -c copilot -n '__fish_seen_subcommand_from help' -a 'monitoring' -d 'Monitoring with OpenTelemetry'
-complete -c copilot -n '__fish_seen_subcommand_from help' -a 'permissions' -d 'Permissions'
-complete -c copilot -n '__fish_seen_subcommand_from help' -a 'providers' -d 'Custom Model Providers (BYOK)'
+complete -c copilot -n '__fish_seen_subcommand_from help' -xa '(__fish_copilot_help_topics)' -d 'Help topic'
