@@ -22,6 +22,7 @@ function __fish_copilot_models
         claude-sonnet-4.6 \
         claude-sonnet-4.5 \
         claude-haiku-4.5 \
+        claude-opus-4.7 \
         claude-opus-4.6 \
         claude-opus-4.6-fast \
         claude-opus-4.5 \
