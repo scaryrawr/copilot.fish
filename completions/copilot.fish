@@ -7,8 +7,8 @@ complete -c copilot -f
 complete -c copilot -l effort -xa 'low medium high xhigh' -d 'Set the reasoning effort level'
 complete -c copilot -l acp -d 'Start as Agent Client Protocol server'
 complete -c copilot -l add-dir -r -a '(__fish_complete_directories)' -d 'Add a directory to the allowed list for file access'
-complete -c copilot -l add-github-mcp-tool -r -d 'Add a tool to enable for the GitHub MCP server instead of the default CLI subset'
-complete -c copilot -l add-github-mcp-toolset -r -d 'Add a toolset to enable for the GitHub MCP server instead of the default CLI subset'
+complete -c copilot -l add-github-mcp-tool -r -d 'Add a GitHub MCP server tool instead of the default CLI subset; use "*" for all tools'
+complete -c copilot -l add-github-mcp-toolset -r -d 'Add a GitHub MCP server toolset instead of the default CLI subset; use "all" for all toolsets'
 complete -c copilot -l additional-mcp-config -r -d 'Additional MCP servers configuration as JSON string or file path (prefix with @)'
 complete -c copilot -l agent -x -a '(__fish_copilot_agents)' -d 'Specify a custom agent to use'
 complete -c copilot -l allow-all -d 'Enable all permissions (equivalent to --allow-all-tools --allow-all-paths --allow-all-urls)'
@@ -26,8 +26,8 @@ complete -c copilot -l config-dir -r -a '(__fish_complete_directories)' -d 'Set 
 complete -c copilot -l connect -d 'Connect directly to a remote session (optionally specify session ID or task ID)'
 complete -c copilot -l continue -d 'Resume the most recent session'
 complete -c copilot -l deny-tool -d 'Tools the CLI does not have permission to use; will not prompt for permission'
-complete -c copilot -l deny-url -d 'Deny access to specific URLs or domains'
-complete -c copilot -l disable-builtin-mcps -d 'Disable all built-in MCP servers'
+complete -c copilot -l deny-url -d 'Deny access to specific URLs or domains; takes precedence over --allow-url'
+complete -c copilot -l disable-builtin-mcps -d 'Disable all built-in MCP servers (currently: github-mcp-server)'
 complete -c copilot -l disable-mcp-server -x -a '(__fish_copilot_mcp_servers)' -d 'Disable a specific MCP server'
 complete -c copilot -l disallow-temp-dir -d 'Prevent automatic access to the system temporary directory'
 complete -c copilot -l enable-all-github-mcp-tools -d 'Enable all GitHub MCP server tools instead of the default CLI subset'
@@ -44,6 +44,7 @@ complete -c copilot -l mode -xa 'interactive plan autopilot' -d 'Set the initial
 complete -c copilot -l model -x -a '(__fish_copilot_models)' -d 'Set the AI model to use'
 complete -c copilot -l mouse -a 'on off' -d 'Enable mouse support in alt screen mode (on|off)'
 complete -c copilot -n '__fish_prev_arg_in --mouse' -a 'on off' -d 'Enable mouse support in alt screen mode (on|off)'
+complete -c copilot -s n -l name -r -d 'Set a name for the new session'
 complete -c copilot -l no-ask-user -d 'Disable the ask_user tool (agent works autonomously without asking questions)'
 complete -c copilot -l no-auto-update -d 'Disable downloading CLI update automatically (disabled by default in CI environments)'
 complete -c copilot -l no-bash-env -d 'Disable BASH_ENV support for bash shells'
@@ -51,14 +52,14 @@ complete -c copilot -l no-color -d 'Disable all color output'
 complete -c copilot -l no-custom-instructions -d 'Disable loading of custom instructions from AGENTS.md and related files'
 complete -c copilot -s p -l prompt -r -d 'Execute a prompt in non-interactive mode (exits after completion)'
 complete -c copilot -l output-format -xa 'text json' -d 'Output format: ''text'' (default) or ''json'' (JSONL, one JSON object per line)'
-complete -c copilot -l plain-diff -d 'Disable rich diff rendering'
+complete -c copilot -l plain-diff -d 'Disable rich diff rendering with syntax highlighting via configured diff tool'
 complete -c copilot -l plan -d 'Start in plan mode'
 complete -c copilot -l plugin-dir -r -a '(__fish_complete_directories)' -d 'Load a plugin from a local directory (can be used multiple times)'
 complete -c copilot -l remote -d 'Enable remote control of your session from GitHub web and mobile'
 complete -c copilot -l reasoning-effort -xa 'low medium high xhigh' -d 'Set the reasoning effort level'
 complete -c copilot -l no-mouse -d 'Disable mouse support in alt screen mode'
 complete -c copilot -l no-remote -d 'Disable remote control of your session from GitHub web and mobile'
-complete -c copilot -l resume -d 'Resume from a previous session (optionally specify session ID or task ID)'
+complete -c copilot -l resume -d 'Resume from a previous session (optionally specify session ID, task ID, or name)'
 complete -c copilot -s s -l silent -d 'Output only the agent response (no stats), useful for scripting with -p'
 complete -c copilot -l screen-reader -d 'Enable screen reader optimizations'
 complete -c copilot -l secret-env-vars -d 'Environment variable names whose values are stripped from shell and MCP server environments and redacted from output'
@@ -133,40 +134,68 @@ complete -c copilot -n '__fish_seen_subcommand_from mcp; and __fish_seen_subcomm
 complete -c copilot -n '__fish_seen_subcommand_from mcp; and __fish_seen_subcommand_from remove' -xa '(__fish_copilot_mcp_servers)' -d 'Server name'
 
 # plugin subcommand
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from install uninstall update list marketplace' -s h -l help -d 'display help for command'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from install uninstall update list marketplace' -a install -d 'Install a plugin'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from install uninstall update list marketplace' -a uninstall -d 'Uninstall a plugin'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from install uninstall update list marketplace' -a update -d 'Update a plugin to the latest version'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from install uninstall update list marketplace' -a list -d 'List installed plugins'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from install uninstall update list marketplace' -a marketplace -d 'Manage plugin marketplaces'
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and not __fish_copilot_token_is 3 install; and not __fish_copilot_token_is 3 uninstall; and not __fish_copilot_token_is 3 update; and not __fish_copilot_token_is 3 list; and not __fish_copilot_token_is 3 marketplace' -s h -l help -d 'display help for command'
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and not __fish_copilot_token_is 3 install; and not __fish_copilot_token_is 3 uninstall; and not __fish_copilot_token_is 3 update; and not __fish_copilot_token_is 3 list; and not __fish_copilot_token_is 3 marketplace' -a install -d 'Install a plugin'
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and not __fish_copilot_token_is 3 install; and not __fish_copilot_token_is 3 uninstall; and not __fish_copilot_token_is 3 update; and not __fish_copilot_token_is 3 list; and not __fish_copilot_token_is 3 marketplace' -a uninstall -d 'Uninstall a plugin'
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and not __fish_copilot_token_is 3 install; and not __fish_copilot_token_is 3 uninstall; and not __fish_copilot_token_is 3 update; and not __fish_copilot_token_is 3 list; and not __fish_copilot_token_is 3 marketplace' -a update -d 'Update a plugin'
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and not __fish_copilot_token_is 3 install; and not __fish_copilot_token_is 3 uninstall; and not __fish_copilot_token_is 3 update; and not __fish_copilot_token_is 3 list; and not __fish_copilot_token_is 3 marketplace' -a list -d 'List installed plugins'
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and not __fish_copilot_token_is 3 install; and not __fish_copilot_token_is 3 uninstall; and not __fish_copilot_token_is 3 update; and not __fish_copilot_token_is 3 list; and not __fish_copilot_token_is 3 marketplace' -a marketplace -d 'Manage plugin marketplaces'
 
-# plugin install/uninstall/update/list options
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from install uninstall update list' -l config-dir -r -a '(__fish_complete_directories)' -d 'Path to the configuration directory'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from install uninstall update list' -s h -l help -d 'display help for command'
+# plugin install options
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 install' -l config-dir -r -a '(__fish_complete_directories)' -d 'Path to the configuration directory'
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 install' -s h -l help -d 'display help for command'
+
+# plugin uninstall options
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 uninstall' -l config-dir -r -a '(__fish_complete_directories)' -d 'Path to the configuration directory'
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 uninstall' -s h -l help -d 'display help for command'
+
+# plugin update options
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 update' -l config-dir -r -a '(__fish_complete_directories)' -d 'Path to the configuration directory'
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 update' -s h -l help -d 'display help for command'
+
+# plugin list options
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 list' -l config-dir -r -a '(__fish_complete_directories)' -d 'Path to the configuration directory'
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 list' -s h -l help -d 'display help for command'
 
 # plugin install/uninstall/update arguments
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from install' -xa '(__fish_copilot_marketplace_plugins)' -d 'Plugin source (plugin@marketplace, owner/repo, owner/repo:path, or URL)'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from uninstall' -xa '(__fish_copilot_installed_plugins)' -d 'Plugin name (plugin-name or plugin-name@marketplace-name)'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and not __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from update' -xa '(__fish_copilot_installed_plugins)' -d 'Plugin name (plugin-name@marketplace-name)'
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 install' -xa '(__fish_copilot_marketplace_plugins)' -d 'Plugin source (plugin@marketplace, owner/repo, owner/repo:path, or URL)'
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 uninstall' -xa '(__fish_copilot_installed_plugins)' -d 'Plugin name (plugin-name or plugin-name@marketplace-name)'
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 update' -xa '(__fish_copilot_installed_plugins)' -d 'Plugin name'
 
 # plugin marketplace subcommand
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and not __fish_seen_subcommand_from add remove list browse update' -s h -l help -d 'display help for command'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and not __fish_seen_subcommand_from add remove list browse update' -a add -d 'Add a marketplace'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and not __fish_seen_subcommand_from add remove list browse update' -a remove -d 'Remove a marketplace'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and not __fish_seen_subcommand_from add remove list browse update' -a list -d 'List registered marketplaces'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and not __fish_seen_subcommand_from add remove list browse update' -a browse -d 'Browse plugins in a marketplace'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and not __fish_seen_subcommand_from add remove list browse update' -a update -d 'Update marketplace plugin catalogs'
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and not __fish_copilot_token_is 4 add; and not __fish_copilot_token_is 4 remove; and not __fish_copilot_token_is 4 list; and not __fish_copilot_token_is 4 browse; and not __fish_copilot_token_is 4 update' -s h -l help -d 'display help for command'
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and not __fish_copilot_token_is 4 add; and not __fish_copilot_token_is 4 remove; and not __fish_copilot_token_is 4 list; and not __fish_copilot_token_is 4 browse; and not __fish_copilot_token_is 4 update' -a add -d 'Add a marketplace'
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and not __fish_copilot_token_is 4 add; and not __fish_copilot_token_is 4 remove; and not __fish_copilot_token_is 4 list; and not __fish_copilot_token_is 4 browse; and not __fish_copilot_token_is 4 update' -a remove -d 'Remove a marketplace'
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and not __fish_copilot_token_is 4 add; and not __fish_copilot_token_is 4 remove; and not __fish_copilot_token_is 4 list; and not __fish_copilot_token_is 4 browse; and not __fish_copilot_token_is 4 update' -a list -d 'List registered marketplaces'
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and not __fish_copilot_token_is 4 add; and not __fish_copilot_token_is 4 remove; and not __fish_copilot_token_is 4 list; and not __fish_copilot_token_is 4 browse; and not __fish_copilot_token_is 4 update' -a browse -d 'Browse plugins in a marketplace'
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and not __fish_copilot_token_is 4 add; and not __fish_copilot_token_is 4 remove; and not __fish_copilot_token_is 4 list; and not __fish_copilot_token_is 4 browse; and not __fish_copilot_token_is 4 update' -a update -d 'Update marketplace plugin catalogs'
 
-# plugin marketplace subcommand options
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from add remove list browse update' -l config-dir -r -a '(__fish_complete_directories)' -d 'Path to the configuration directory'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from add remove list browse update' -s h -l help -d 'display help for command'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from remove' -s f -l force -d 'Force removal even if plugins are installed'
+# plugin marketplace add options
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and __fish_copilot_token_is 4 add' -l config-dir -r -a '(__fish_complete_directories)' -d 'Path to the configuration directory'
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and __fish_copilot_token_is 4 add' -s h -l help -d 'display help for command'
+
+# plugin marketplace browse options
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and __fish_copilot_token_is 4 browse' -l config-dir -r -a '(__fish_complete_directories)' -d 'Path to the configuration directory'
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and __fish_copilot_token_is 4 browse' -s h -l help -d 'display help for command'
+
+# plugin marketplace list options
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and __fish_copilot_token_is 4 list' -l config-dir -r -a '(__fish_complete_directories)' -d 'Path to the configuration directory'
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and __fish_copilot_token_is 4 list' -s h -l help -d 'display help for command'
+
+# plugin marketplace remove options
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and __fish_copilot_token_is 4 remove' -l config-dir -r -a '(__fish_complete_directories)' -d 'Path to the configuration directory'
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and __fish_copilot_token_is 4 remove' -s f -l force -d 'Force removal even if plugins are installed'
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and __fish_copilot_token_is 4 remove' -s h -l help -d 'display help for command'
+
+# plugin marketplace update options
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and __fish_copilot_token_is 4 update' -l config-dir -r -a '(__fish_complete_directories)' -d 'Path to the configuration directory'
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and __fish_copilot_token_is 4 update' -s h -l help -d 'display help for command'
 
 # plugin marketplace arguments
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from add' -F -d 'Marketplace source (owner/repo, URL, or local path)'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from browse' -xa '(__fish_copilot_marketplaces)' -d 'Marketplace name'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from remove' -xa '(__fish_copilot_marketplaces)' -d 'Marketplace name'
-complete -c copilot -n '__fish_seen_subcommand_from plugin; and __fish_seen_subcommand_from marketplace; and __fish_seen_subcommand_from update' -xa '(__fish_copilot_marketplaces)' -d 'Marketplace name'
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and __fish_copilot_token_is 4 add' -F -d 'Marketplace source (owner/repo, URL, or local path)'
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and __fish_copilot_token_is 4 browse' -xa '(__fish_copilot_marketplaces)' -d 'Marketplace name'
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and __fish_copilot_token_is 4 remove' -xa '(__fish_copilot_marketplaces)' -d 'Marketplace name'
+complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and __fish_copilot_token_is 4 update' -xa '(__fish_copilot_marketplaces)' -d 'Marketplace name (omit to update all)'
 
 # Help topics
 complete -c copilot -n '__fish_seen_subcommand_from help' -xa '(__fish_copilot_help_topics)' -d 'Help topic'
