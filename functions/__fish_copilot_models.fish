@@ -27,8 +27,8 @@ function __fish_copilot_models
         claude-opus-4.6-fast \
         claude-opus-4.5 \
         claude-sonnet-4 \
-        gpt-5.4 \
         gpt-5.5 \
+        gpt-5.4 \
         gpt-5.3-codex \
         gpt-5.2-codex \
         gpt-5.2 \

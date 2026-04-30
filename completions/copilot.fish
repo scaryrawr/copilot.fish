@@ -70,6 +70,7 @@ complete -c copilot -s v -l version -d 'show version information'
 complete -c copilot -l yolo -d 'Enable all permissions (equivalent to --allow-all-tools --allow-all-paths --allow-all-urls)'
 
 # Commands
+complete -c copilot -n __fish_use_subcommand -a completion -d 'Generate a shell completion script'
 complete -c copilot -n __fish_use_subcommand -a help -d 'Display help information'
 complete -c copilot -n __fish_use_subcommand -a init -d 'Initialize Copilot instructions'
 complete -c copilot -n __fish_use_subcommand -a login -d 'Authenticate with Copilot'
@@ -77,6 +78,10 @@ complete -c copilot -n __fish_use_subcommand -a mcp -d 'Manage MCP servers'
 complete -c copilot -n __fish_use_subcommand -a plugin -d 'Manage plugins'
 complete -c copilot -n __fish_use_subcommand -a update -d 'Download the latest version'
 complete -c copilot -n __fish_use_subcommand -a version -d 'Display version information'
+
+# completion subcommand options
+complete -c copilot -n '__fish_copilot_token_is 2 completion' -s h -l help -d 'display help for command'
+complete -c copilot -n '__fish_copilot_token_is 2 completion; and not __fish_copilot_token_is 3 bash; and not __fish_copilot_token_is 3 zsh; and not __fish_copilot_token_is 3 fish' -xa 'bash zsh fish' -d 'Target shell'
 
 # init subcommand options
 complete -c copilot -n '__fish_seen_subcommand_from init' -s h -l help -d 'display help for command'
