@@ -4,7 +4,7 @@
 complete -c copilot -f
 
 # Options
-complete -c copilot -l effort -xa 'low medium high xhigh' -d 'Set the reasoning effort level'
+complete -c copilot -l effort -xa 'none low medium high xhigh' -d 'Set the reasoning effort level'
 complete -c copilot -l acp -d 'Start as Agent Client Protocol server'
 complete -c copilot -l add-dir -r -a '(__fish_complete_directories)' -d 'Add a directory to the allowed list for file access'
 complete -c copilot -l add-github-mcp-tool -r -d 'Add a GitHub MCP server tool instead of the default CLI subset; use "*" for all tools'
@@ -17,12 +17,13 @@ complete -c copilot -l allow-all-tools -d 'Allow all tools to run automatically 
 complete -c copilot -l allow-all-urls -d 'Allow access to all URLs without confirmation'
 complete -c copilot -l allow-tool -d 'Tools the CLI has permission to use; will not prompt for permission'
 complete -c copilot -l allow-url -d 'Allow access to specific URLs or domains'
+complete -c copilot -l attachment -r -F -d 'Attach a file (image or native document) to the initial prompt; only valid in non-interactive mode'
 complete -c copilot -l autopilot -d 'Start in autopilot mode'
 complete -c copilot -l available-tools -d 'Only these tools will be available to the model'
 complete -c copilot -l banner -d 'Show the startup banner'
 complete -c copilot -l bash-env -a 'on off' -d 'Enable BASH_ENV support for bash shells (on|off)'
 complete -c copilot -n '__fish_prev_arg_in --bash-env' -a 'on off' -d 'Enable BASH_ENV support for bash shells (on|off)'
-complete -c copilot -l config-dir -r -a '(__fish_complete_directories)' -d 'Set the configuration directory'
+complete -c copilot -s C -r -a '(__fish_complete_directories)' -d 'Change working directory before doing anything else'
 complete -c copilot -l connect -d 'Connect directly to a remote session (optionally specify session ID or task ID)'
 complete -c copilot -l continue -d 'Resume the most recent session'
 complete -c copilot -l deny-tool -d 'Tools the CLI does not have permission to use; will not prompt for permission'
@@ -39,7 +40,7 @@ complete -c copilot -s h -l help -d 'display help for command'
 complete -c copilot -s i -l interactive -r -d 'Start interactive mode and automatically execute this prompt'
 complete -c copilot -l log-dir -r -a '(__fish_complete_directories)' -d 'Set log file directory'
 complete -c copilot -l log-level -xa 'none error warning info debug all default' -d 'Set the log level'
-complete -c copilot -l max-autopilot-continues -r -d 'Maximum number of continuation messages in autopilot mode (default: unlimited)'
+complete -c copilot -l max-autopilot-continues -r -d 'Maximum number of continuation messages in autopilot mode (default: 5)'
 complete -c copilot -l mode -xa 'interactive plan autopilot' -d 'Set the initial agent mode'
 complete -c copilot -l model -x -a '(__fish_copilot_models)' -d 'Set the AI model to use'
 complete -c copilot -l mouse -a 'on off' -d 'Enable mouse support in alt screen mode (on|off)'
@@ -56,7 +57,7 @@ complete -c copilot -l plain-diff -d 'Disable rich diff rendering with syntax hi
 complete -c copilot -l plan -d 'Start in plan mode'
 complete -c copilot -l plugin-dir -r -a '(__fish_complete_directories)' -d 'Load a plugin from a local directory (can be used multiple times)'
 complete -c copilot -l remote -d 'Enable remote control of your session from GitHub web and mobile'
-complete -c copilot -l reasoning-effort -xa 'low medium high xhigh' -d 'Set the reasoning effort level'
+complete -c copilot -l reasoning-effort -xa 'none low medium high xhigh' -d 'Set the reasoning effort level'
 complete -c copilot -l no-mouse -d 'Disable mouse support in alt screen mode'
 complete -c copilot -l no-remote -d 'Disable remote control of your session from GitHub web and mobile'
 complete -c copilot -l resume -d 'Resume from a previous session (optionally specify session ID, task ID, or name)'
@@ -88,6 +89,7 @@ complete -c copilot -n '__fish_seen_subcommand_from init' -s h -l help -d 'displ
 
 # update subcommand options
 complete -c copilot -n '__fish_seen_subcommand_from update' -s h -l help -d 'display help for command'
+complete -c copilot -n '__fish_copilot_token_is 2 update; and not __fish_copilot_token_is 3 prerelease' -xa 'prerelease' -d 'Update channel'
 
 # version subcommand options
 complete -c copilot -n '__fish_seen_subcommand_from version' -s h -l help -d 'display help for command'
@@ -97,7 +99,6 @@ complete -c copilot -n '__fish_seen_subcommand_from help' -s h -l help -d 'displ
 
 # login subcommand options
 complete -c copilot -n '__fish_seen_subcommand_from login' -l host -r -d 'GitHub host URL'
-complete -c copilot -n '__fish_seen_subcommand_from login' -l config-dir -r -a '(__fish_complete_directories)' -d 'Set the configuration directory'
 complete -c copilot -n '__fish_seen_subcommand_from login' -s h -l help -d 'display help for command'
 
 # mcp subcommand
@@ -107,9 +108,6 @@ complete -c copilot -n '__fish_seen_subcommand_from mcp; and not __fish_seen_sub
 complete -c copilot -n '__fish_seen_subcommand_from mcp; and not __fish_seen_subcommand_from add get help list remove' -a help -d 'display help for command'
 complete -c copilot -n '__fish_seen_subcommand_from mcp; and not __fish_seen_subcommand_from add get help list remove' -a list -d 'List configured MCP servers'
 complete -c copilot -n '__fish_seen_subcommand_from mcp; and not __fish_seen_subcommand_from add get help list remove' -a remove -d 'Remove an MCP server'
-
-# mcp shared options
-complete -c copilot -n '__fish_seen_subcommand_from mcp; and __fish_seen_subcommand_from add get list remove' -l config-dir -r -a '(__fish_complete_directories)' -d 'Path to the configuration directory'
 
 # mcp add options
 complete -c copilot -n '__fish_seen_subcommand_from mcp; and __fish_seen_subcommand_from add' -l env -r -d 'Environment variable (KEY=VALUE, can be repeated)'
@@ -147,19 +145,15 @@ complete -c copilot -n '__fish_copilot_token_is 2 plugin; and not __fish_copilot
 complete -c copilot -n '__fish_copilot_token_is 2 plugin; and not __fish_copilot_token_is 3 install; and not __fish_copilot_token_is 3 uninstall; and not __fish_copilot_token_is 3 update; and not __fish_copilot_token_is 3 list; and not __fish_copilot_token_is 3 marketplace' -a marketplace -d 'Manage plugin marketplaces'
 
 # plugin install options
-complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 install' -l config-dir -r -a '(__fish_complete_directories)' -d 'Path to the configuration directory'
 complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 install' -s h -l help -d 'display help for command'
 
 # plugin uninstall options
-complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 uninstall' -l config-dir -r -a '(__fish_complete_directories)' -d 'Path to the configuration directory'
 complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 uninstall' -s h -l help -d 'display help for command'
 
 # plugin update options
-complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 update' -l config-dir -r -a '(__fish_complete_directories)' -d 'Path to the configuration directory'
 complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 update' -s h -l help -d 'display help for command'
 
 # plugin list options
-complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 list' -l config-dir -r -a '(__fish_complete_directories)' -d 'Path to the configuration directory'
 complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 list' -s h -l help -d 'display help for command'
 
 # plugin install/uninstall/update arguments
@@ -176,24 +170,19 @@ complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_tok
 complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and not __fish_copilot_token_is 4 add; and not __fish_copilot_token_is 4 remove; and not __fish_copilot_token_is 4 list; and not __fish_copilot_token_is 4 browse; and not __fish_copilot_token_is 4 update' -a update -d 'Update marketplace plugin catalogs'
 
 # plugin marketplace add options
-complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and __fish_copilot_token_is 4 add' -l config-dir -r -a '(__fish_complete_directories)' -d 'Path to the configuration directory'
 complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and __fish_copilot_token_is 4 add' -s h -l help -d 'display help for command'
 
 # plugin marketplace browse options
-complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and __fish_copilot_token_is 4 browse' -l config-dir -r -a '(__fish_complete_directories)' -d 'Path to the configuration directory'
 complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and __fish_copilot_token_is 4 browse' -s h -l help -d 'display help for command'
 
 # plugin marketplace list options
-complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and __fish_copilot_token_is 4 list' -l config-dir -r -a '(__fish_complete_directories)' -d 'Path to the configuration directory'
 complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and __fish_copilot_token_is 4 list' -s h -l help -d 'display help for command'
 
 # plugin marketplace remove options
-complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and __fish_copilot_token_is 4 remove' -l config-dir -r -a '(__fish_complete_directories)' -d 'Path to the configuration directory'
 complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and __fish_copilot_token_is 4 remove' -s f -l force -d 'Force removal even if plugins are installed'
 complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and __fish_copilot_token_is 4 remove' -s h -l help -d 'display help for command'
 
 # plugin marketplace update options
-complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and __fish_copilot_token_is 4 update' -l config-dir -r -a '(__fish_complete_directories)' -d 'Path to the configuration directory'
 complete -c copilot -n '__fish_copilot_token_is 2 plugin; and __fish_copilot_token_is 3 marketplace; and __fish_copilot_token_is 4 update' -s h -l help -d 'display help for command'
 
 # plugin marketplace arguments
