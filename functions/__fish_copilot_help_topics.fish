@@ -22,9 +22,11 @@ function __fish_copilot_help_topics
     end
 
     printf '%s\n' \
+        'billing\tAI credit usage' \
         'commands\tInteractive Mode Commands' \
         'config\tConfiguration Settings' \
         'environment\tEnvironment Variables' \
+        'limits\tSession Limits Controls' \
         'logging\tLogging' \
         'monitoring\tMonitoring with OpenTelemetry' \
         'permissions\tPermissions' \
