@@ -1,41 +1,18 @@
-# copilot.fish
+# copilot.fish has moved
 
-Fish shell completions and utilities for [GitHub Copilot CLI](https://github.com/features/copilot/cli/).
+Fish and Zsh integrations for GitHub Copilot CLI are now maintained together
+in [scaryrawr/copilot.zsh](https://github.com/scaryrawr/copilot.zsh).
 
-## Installation
-
-Install with [Fisher](https://github.com/jorgebucaran/fisher):
-
-```fish
-fisher install scaryrawr/copilot.fish
-```
-
-## Features
-
-### Completions
-
-Full command-line completions for the `copilot` command, including:
-
-- All command-line options and flags
-- Model selection (`--model`)
-- Log levels (`--log-level`)
-- Streaming options (`--stream`)
-- Help topics
-
-### YOLO Mode
-
-The `yopilot` function provides a convenient wrapper that runs Copilot in "YOLO mode" with all permissions enabled:
+Existing installations from this repository remain usable, but they will not
+receive future completion updates. Migrate to the combined repository with:
 
 ```fish
-yopilot
+fisher remove scaryrawr/copilot.fish
+fisher install scaryrawr/copilot.zsh
 ```
 
-This is equivalent to:
+New Fish installations should use:
 
 ```fish
-copilot --allow-all-tools --allow-all-paths
+fisher install scaryrawr/copilot.zsh
 ```
-
-## License
-
-MIT
